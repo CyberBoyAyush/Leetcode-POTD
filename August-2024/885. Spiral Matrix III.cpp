@@ -1,3 +1,5 @@
+//T.C : O(max(rows,cols)^2)
+//S.C : O(1) (I am not considering the result matrix we have to return as result)
 class Solution {
 public:
     vector<vector<int>> directions = {
