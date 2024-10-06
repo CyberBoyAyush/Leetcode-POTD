@@ -1,9 +1,11 @@
+// Approach 1 -> Sorting and making pairs
+// TC - O(nlogn) 
 class Solution {
 public:
     long long dividePlayers(vector<int>& skill) {
         int n = skill.size();
 
-        sort(begin(skill), end(skill));
+        sort(begin(skill),end(skill));
 
         int i = 0;
         int j = n-1;
@@ -11,20 +13,20 @@ public:
 
         long long chem = 0;
 
-        while(i < j) {
+        while(i<j){
             int currSkill = skill[i] + skill[j];
 
-            if(currSkill != s) {
-                return -1;
+            if(currSkill != s){
+                return -1; // skill level does not match
             }
 
-            chem += (long long)(skill[i]) * (long long)(skill[j]);
+            // add in chem
+            chem += ((long long)skill[i] * (long long)skill[j]);
+
             i++;
             j--;
         }
-        
 
         return chem;
-
     }
 };
