@@ -113,3 +113,73 @@ public:
         return ans;
     }
 };
+
+
+// Approach 3 -> Topo Sort with preq list
+class Solution {
+public:
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+        // creating adj list and calculating indegree
+        unordered_map<int, vector<int>> adj;
+
+        vector<int> inDeg(numCourses, 0); // initial indegree will be 0
+
+        for(auto &edge : prerequisites){
+            int u = edge[0];
+            int v = edge[1];
+
+            //u --> v
+            adj[u].push_back(v);
+            inDeg[v]++; // indegree of v increased
+        }
+
+        queue<int> q; // for topo sort
+
+        for(int i = 0; i<numCourses; i++){
+            if(inDeg[i] == 0){
+                q.push(i);
+            }
+        }
+
+        // creation of list -> topo
+        unordered_map<int, unordered_set<int>> mpp;
+
+        // standard topo template
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+
+            // going to neighbours
+            for(auto &ngbr : adj[node]){
+                // we have the node and neigh we update the preq list
+                mpp[ngbr].insert(node);
+
+                // finding preq of node also to put in list -> imp for ques
+                for(auto &preq : mpp[node]){
+                    mpp[ngbr].insert(preq);
+                }
+
+                // reducing indegree
+                inDeg[ngbr]--;
+                if(inDeg[ngbr] == 0){
+                    // push in queue
+                    q.push(ngbr);
+                }
+            }
+        }
+
+        // Now processing queries
+        int Q = queries.size();
+        vector<bool> ans(Q,false);
+
+        for(int i = 0; i<Q; i++){
+            int src = queries[i][0];
+            int dest = queries[i][1];
+
+            bool reacheable = mpp[dest].contains(src); // finding preq in mpp (topo)
+            ans[i] = reacheable;
+        }
+
+        return ans;
+    }
+};
